@@ -1,0 +1,12 @@
+*
+!*/
+PakketManager/dist/*
+build
+
+!*.java
+!*.jsp
+!persistence.xml
+!web.xml
+!glassfish-web.xml
+!Beans-interface/nbproject/project.properties
+!.gitignore
