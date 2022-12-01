@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import entities.Koeriers;
 import entities.Pakketen;
+import java.util.Date;
 import javax.persistence.NoResultException;
 
 /**
@@ -32,7 +33,11 @@ public class DataBean implements DataBeanRemote {
     @Override
     public ArrayList<Object> getPakketen(int knr) {
         Query q = em.createQuery("select p from Pakketen p where p.knr = ?1");
-        q.setParameter(1, knr);
+        Object k = getKoerier(knr);
+        if(k == null){
+            return new ArrayList<>();
+        }
+        q.setParameter(1, k);
         return new ArrayList<>(q.getResultList());
     }
 
@@ -69,15 +74,23 @@ public class DataBean implements DataBeanRemote {
     }
 
     @Override
-    public Object addPakket(int pgewicht, int pstatus, String lnaam, String lstraat, int lnummer, int lpostcode, String lgemeente) {
+    public Object addPakket(int pgewicht, int pstatus, String lnaam, String lstraat, int lnummer, int lpostcode, String lgemeente, int knr) {
         Pakketen p = new Pakketen();
-        p.setPnr(this.getMaxPakketNr());
+        System.out.println(this.getMaxPakketNr());
+        p.setPnr(this.getMaxPakketNr() + 1);
         p.setPgewicht(pgewicht);
         p.setPstatus(pstatus);
+        p.setLnaam(lnaam);
         p.setLstraat(lstraat);
         p.setLnummer(lnummer);
         p.setLpostcode(lpostcode);
         p.setLgemeente(lgemeente);
+        p.setBesteldatum(new Date());
+        Koeriers k = (Koeriers)getKoerier(knr);
+        if(k == null)
+            throw new IllegalArgumentException("Koerier bestaat nier");
+        p.setKnr(k);
+        
         em.persist(p);
         return p;
     }

@@ -57,20 +57,26 @@ public class GenericHandler extends HttpServlet {
                 rd.forward(request, response);
             }else if(path.get(1).equals("Test")){
                 if(request.getParameter("getPakketen") != null){
-                    System.out.println("-----" + dataBean.getPakketen());
+                    dataBean.getPakketen().forEach((p) -> {
+                        dataBean.printPakket(p);
+                    }); //System.out.println("-----" + );
                 }else if(request.getParameter("getPakketen_knr_submit") != null){
                     int knr = Integer.parseInt(request.getParameter("getPakketen_knr"));
-                    System.out.println("-----" + dataBean.getPakketen(knr));
+                    dataBean.getPakketen(knr).forEach((p) -> {
+                        dataBean.printPakket(p);
+                    });
+                    //System.out.println("-----" + );
                 }else if(request.getParameter("getPakket_submit") != null){
                     int pnr = Integer.parseInt(request.getParameter("getPakket"));
-                    System.out.println("-----" + dataBean.getPakket(pnr));
+                    dataBean.printPakket(dataBean.getPakket(pnr));
+                    //System.out.println("-----" + );
                 }else if(request.getParameter("getKoerier_submit") != null){
                     int knr = Integer.parseInt(request.getParameter("getKoerier"));
                     System.out.println("-----" + dataBean.getKoerier(knr));
                 }else if(request.getParameter("getPakketStatus_submit") != null){
                     int pnr = Integer.parseInt(request.getParameter("getPakketStatus"));
                     System.out.println("-----" + dataBean.getPakketStatus(pnr));
-                }else if(request.getParameter("addPakket_pstatus") != null){
+                }else if(request.getParameter("addPakket_submit") != null){
                     int pgewicht = Integer.parseInt(request.getParameter("addPakket_pgewicht"));
                     int pstatus = Integer.parseInt(request.getParameter("addPakket_pstatus"));
                     String lnaam = request.getParameter("addPakket_lnaam");
@@ -78,6 +84,7 @@ public class GenericHandler extends HttpServlet {
                     int lnummer = Integer.parseInt(request.getParameter("addPakket_lnummer"));
                     int lpostcode = Integer.parseInt(request.getParameter("addPakket_lpostcode"));
                     String lgemeente = request.getParameter("addPakket_lgemeente");
+                    int knr = Integer.parseInt(request.getParameter("addPakket_knr"));
                     Object p = dataBean.addPakket(
                             pgewicht,
                             pstatus,
@@ -85,9 +92,12 @@ public class GenericHandler extends HttpServlet {
                             lstraat,
                             lnummer,
                             lpostcode,
-                            lgemeente
+                            lgemeente,
+                            knr
                         );
                     dataBean.printPakket(p);
+                }else if(request.getParameter("getMaxPnr") != null){
+                    System.out.println("-------" + dataBean.getMaxPakketNr());
                 }
                 //else if(request.getParameter("setPakketStatus") != null){
                     //int knr = Integer.parseInt(request.getParameter("setPakketStatus"));
