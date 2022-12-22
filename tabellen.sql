@@ -13,7 +13,13 @@ DROP TABLE Koeriers;
 
 CREATE TABLE Koeriers(
     knr int primary key,
-    knaam varchar(30));
+    knaam varchar(30),
+    paswoord varchar(30));
+
+CREATE TABLE Bediendes(
+    bnr int primary key,
+    bnaam varchar(30),
+    paswoord varchar(30));
     
 
 CREATE TABLE Pakketen(
