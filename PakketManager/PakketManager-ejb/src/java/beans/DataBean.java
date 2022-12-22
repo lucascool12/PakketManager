@@ -12,8 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import entities.Koeriers;
 import entities.Pakketen;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Date;
 import javax.persistence.NoResultException;
 
@@ -23,7 +21,6 @@ import javax.persistence.NoResultException;
  */
 @Stateless
 public class DataBean implements DataBeanRemote{
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     public static final String TRANSIT = "Transit";
     public static final String PROBLEEM = "Probleem";
     public static final String GELEVERD = "Geleverd";
@@ -62,7 +59,6 @@ public class DataBean implements DataBeanRemote{
        int old = p.getPstatus();
        p.setPstatus(status);
        em.persist(pakket);
-       support.fireIndexedPropertyChange("pstatus", (int)p.getPnr(), (int)old, (int)p.getPstatus());
     }
 
     @Override
@@ -110,7 +106,6 @@ public class DataBean implements DataBeanRemote{
         p.setKnr(k);
         
         em.persist(p);
-        support.firePropertyChange("new pakket", null, (int)p.getPnr());
         return p;
     }
 
@@ -176,17 +171,7 @@ public class DataBean implements DataBeanRemote{
     }
     
     @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-      support.addPropertyChangeListener(listener);
-   }
-    
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-      support.removePropertyChangeListener(listener);
-   }
-
-    @Override
-    public int getAantalPakketMetStatus(int status) {
+    public long getAantalPakketMetStatus(int status) {
         try{
             Query q = em.createQuery("select count(p) from Pakketen p where p.pstatus = ?1");
             q.setParameter(1, status);
@@ -194,7 +179,7 @@ public class DataBean implements DataBeanRemote{
             if(a == null)
                 return 0;
             else
-                return (Integer)a;
+                return (long)a;
         }catch(NoResultException e){
             return 0;
         }

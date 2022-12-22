@@ -7,8 +7,8 @@ package pakketmanagerclient;
 import beans.DataBeanRemote;
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 
@@ -16,36 +16,39 @@ import java.util.ArrayList;
  *
  * @author lucas
  */
-public class PakketStater extends JFrame implements PropertyChangeListener{
+public class PakketStater extends JFrame
+{
     private final DataBeanRemote db;
     public ArrayList<JLabel> statusAantal;
     public PakketStater(final DataBeanRemote db){
         super();
         this.db = db;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new GridLayout(db.getAantalStatussen(),2));
+        this.setLayout(new GridLayout(3, db.getAantalStatussen()));
         statusAantal = new ArrayList<>();
         for(int i = 0; i < db.getAantalStatussen(); i++){
-            this.add(new JLabel(db.getStatusNaam(i)), i);
-            JLabel statussen = new JLabel(Integer.toString(db.getAantalPakketMetStatus(i)));
+            this.add(new JLabel(db.getStatusNaam(i)), 2, i);
+            JLabel statussen = new JLabel(Long.toString(db.getAantalPakketMetStatus(i)));
             statusAantal.add(statussen);
-            this.add(statussen, db.getAantalStatussen() + i);
+            this.add(statussen, 1, i);
         }
+        JButton b = new JButton("Refresh");
+        b.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for(int i = 0; i < db.getAantalStatussen(); i++){
+                    setAantalStatus(i, db.getAantalPakketMetStatus(i));
+                }
+            }
+         
+        });
+        this.add(b);
         this.pack();
         this.setVisible(true);
-        db.addPropertyChangeListener(this);
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals("pstatus") || evt.getPropertyName().equals("pakket")){
-            for(int i = 0; i < statusAantal.size(); i++){
-                this.setAantalStatus(i, db.getAantalPakketMetStatus(i));
-            }
-        }
-    }
     
-    private void setAantalStatus(int status, int aantal){
-        statusAantal.get(status).setText(Integer.toString(aantal));
+    private void setAantalStatus(int status, long aantal){
+        statusAantal.get(status).setText(Long.toString(aantal));
     }
 }

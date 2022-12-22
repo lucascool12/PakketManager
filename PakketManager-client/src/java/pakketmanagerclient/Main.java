@@ -18,9 +18,9 @@ public class Main {
      * @param args the command line arguments
      */
     @EJB
-    DataBeanRemote dataBean;
+    static DataBeanRemote dataBean;
     public static void main(String[] args) {
-        // TODO code application logic here
+        new PakketStater(dataBean);
     }
     
 }

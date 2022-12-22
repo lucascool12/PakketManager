@@ -98,6 +98,15 @@ public class GenericHandler extends HttpServlet {
                     dataBean.printPakket(p);
                 }else if(request.getParameter("getMaxPnr") != null){
                     System.out.println("-------" + dataBean.getMaxPakketNr());
+                }else if(request.getParameter("getStatussenAantal") != null){
+                    int status = Integer.parseInt(request.getParameter("getStatussenAantal_status"));
+                    System.out.println("getStatussenAantal_status");
+                    System.out.println("-------" + dataBean.getAantalPakketMetStatus(status));
+                }else if(request.getParameter("setStatus") != null){
+                    int pnr = Integer.parseInt(request.getParameter("setStatus_pnr"));
+                    int status = Integer.parseInt(request.getParameter("setStatus_status"));
+                    System.out.println("setStatus");
+                    dataBean.setPakketStatus(pnr, status);
                 }
                 //else if(request.getParameter("setPakketStatus") != null){
                     //int knr = Integer.parseInt(request.getParameter("setPakketStatus"));

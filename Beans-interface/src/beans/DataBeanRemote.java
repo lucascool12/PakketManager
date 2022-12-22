@@ -39,8 +39,6 @@ public interface DataBeanRemote {
     public int getPrimaryKey(Object ent);
     public int getMaxPakketNr();
     public void printPakket(Object p);
-    public void addPropertyChangeListener(PropertyChangeListener listener);
-    public void removePropertyChangeListener(PropertyChangeListener listener);
-    public int getAantalPakketMetStatus(int status);
+    public long getAantalPakketMetStatus(int status);
     public int getAantalStatussen();
 }
