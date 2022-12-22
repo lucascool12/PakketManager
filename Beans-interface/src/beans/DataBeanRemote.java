@@ -5,6 +5,7 @@
  */
 package beans;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import javax.ejb.Remote;
 
@@ -21,6 +22,7 @@ public interface DataBeanRemote {
     public void setPakketStatus(Object pakket, int status);
     public void setPakketStatus(int pnr, int status);
     public int getStatus(String status);
+    public String getStatusNaam(int status);
     public int getPakketStatus(Object pakket);
     public int getPakketStatus(int pnr);
     public Object addPakket(
@@ -37,4 +39,8 @@ public interface DataBeanRemote {
     public int getPrimaryKey(Object ent);
     public int getMaxPakketNr();
     public void printPakket(Object p);
+    public void addPropertyChangeListener(PropertyChangeListener listener);
+    public void removePropertyChangeListener(PropertyChangeListener listener);
+    public int getAantalPakketMetStatus(int status);
+    public int getAantalStatussen();
 }

@@ -12,6 +12,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import entities.Koeriers;
 import entities.Pakketen;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Date;
 import javax.persistence.NoResultException;
 
@@ -20,7 +22,15 @@ import javax.persistence.NoResultException;
  * @author lucas
  */
 @Stateless
-public class DataBean implements DataBeanRemote {
+public class DataBean implements DataBeanRemote{
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    public static final String TRANSIT = "Transit";
+    public static final String PROBLEEM = "Probleem";
+    public static final String GELEVERD = "Geleverd";
+    public static final int TRANSIT_STAT = 0;
+    public static final int PROBLEEM_STAT = 1;
+    public static final int GELEVERD_STAT = 2;
+    public static final int AANTAL_STATUS = 3; //begint bij 0 tot aantal - 1
     
     @PersistenceContext
     private EntityManager em;
@@ -49,8 +59,10 @@ public class DataBean implements DataBeanRemote {
     @Override
     public void setPakketStatus(Object pakket, int status) {
        Pakketen p = (Pakketen) pakket;
+       int old = p.getPstatus();
        p.setPstatus(status);
        em.persist(pakket);
+       support.fireIndexedPropertyChange("pstatus", (int)p.getPnr(), (int)old, (int)p.getPstatus());
     }
 
     @Override
@@ -60,7 +72,13 @@ public class DataBean implements DataBeanRemote {
 
     @Override
     public int getStatus(String status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(status.trim().toLowerCase().equals(GELEVERD.toLowerCase())){
+            return GELEVERD_STAT;
+        }else if(status.trim().toLowerCase().equals(PROBLEEM.toLowerCase())){
+            return PROBLEEM_STAT;
+        }else {
+            return TRANSIT_STAT;
+        }
     }
 
     @Override
@@ -92,6 +110,7 @@ public class DataBean implements DataBeanRemote {
         p.setKnr(k);
         
         em.persist(p);
+        support.firePropertyChange("new pakket", null, (int)p.getPnr());
         return p;
     }
 
@@ -145,5 +164,44 @@ public class DataBean implements DataBeanRemote {
                      + "  " + pak.getLpostcode()  + "  " + pak.getLgemeente()
             );
         }
+    }
+
+    @Override
+    public String getStatusNaam(int status) {
+        switch(status){
+            case GELEVERD_STAT: return GELEVERD;
+            case PROBLEEM_STAT: return PROBLEEM;
+            default: return TRANSIT;
+        }
+    }
+    
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+      support.addPropertyChangeListener(listener);
+   }
+    
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+      support.removePropertyChangeListener(listener);
+   }
+
+    @Override
+    public int getAantalPakketMetStatus(int status) {
+        try{
+            Query q = em.createQuery("select count(p) from Pakketen p where p.pstatus = ?1");
+            q.setParameter(1, status);
+            Object a = q.getSingleResult();
+            if(a == null)
+                return 0;
+            else
+                return (Integer)a;
+        }catch(NoResultException e){
+            return 0;
+        }
+    }
+
+    @Override
+    public int getAantalStatussen() {
+        return AANTAL_STATUS;
     }
 }
