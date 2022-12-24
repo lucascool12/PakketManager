@@ -30,7 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Koeriers.findAll", query = "SELECT k FROM Koeriers k")
     , @NamedQuery(name = "Koeriers.findByKnr", query = "SELECT k FROM Koeriers k WHERE k.knr = :knr")
-    , @NamedQuery(name = "Koeriers.findByKnaam", query = "SELECT k FROM Koeriers k WHERE k.knaam = :knaam")})
+    , @NamedQuery(name = "Koeriers.findByKnaam", query = "SELECT k FROM Koeriers k WHERE k.knaam = :knaam")
+    , @NamedQuery(name = "Koeriers.findByPaswoord", query = "SELECT k FROM Koeriers k WHERE k.paswoord = :paswoord")})
 public class Koeriers implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,6 +43,9 @@ public class Koeriers implements Serializable {
     @Size(max = 30)
     @Column(name = "KNAAM")
     private String knaam;
+    @Size(max = 30)
+    @Column(name = "PASWOORD")
+    private String paswoord;
     @OneToMany(mappedBy = "knr")
     private Collection<Pakketen> pakketenCollection;
 
@@ -66,6 +70,14 @@ public class Koeriers implements Serializable {
 
     public void setKnaam(String knaam) {
         this.knaam = knaam;
+    }
+
+    public String getPaswoord() {
+        return paswoord;
+    }
+
+    public void setPaswoord(String paswoord) {
+        this.paswoord = paswoord;
     }
 
     @XmlTransient
