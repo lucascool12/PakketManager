@@ -9,6 +9,7 @@
  */
 
 DROP TABLE Pakketen;
+DROP TABLE Bediendes;
 DROP TABLE Koeriers;
 
 CREATE TABLE Koeriers(
@@ -32,4 +33,5 @@ CREATE TABLE Pakketen(
     lpostcode int,
     lgemeente varchar(30),
     besteldatum date,
+    pcommentaar varchar(80),
     knr int references Koeriers);

@@ -9,3 +9,4 @@ build
 !glassfish-web.xml
 !Beans-interface/nbproject/project.properties
 !.gitignore
+!README.md

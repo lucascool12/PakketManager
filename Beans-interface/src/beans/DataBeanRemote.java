@@ -32,6 +32,7 @@ public interface DataBeanRemote {
             int lnummer,
             int lpostcode,
             String lgemeente,
+            String pcommentaar,
             int knr);
     public void setPakketKoerier(int pnr, int knr);
     public void setPakketKoerier(Object pakket, Object koerier);

@@ -42,6 +42,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Pakketen.findByBesteldatum", query = "SELECT p FROM Pakketen p WHERE p.besteldatum = :besteldatum")})
 public class Pakketen implements Serializable {
 
+    @Size(max = 80)
+    @Column(name = "PCOMMENTAAR")
+    private String pcommentaar;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -182,6 +186,14 @@ public class Pakketen implements Serializable {
     @Override
     public String toString() {
         return "entities.Pakketen[ pnr=" + pnr + " ]";
+    }
+
+    public String getPcommentaar() {
+        return pcommentaar;
+    }
+
+    public void setPcommentaar(String pcommentaar) {
+        this.pcommentaar = pcommentaar;
     }
     
 }

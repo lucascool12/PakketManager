@@ -88,7 +88,7 @@ public class DataBean implements DataBeanRemote{
     }
 
     @Override
-    public Object addPakket(int pgewicht, int pstatus, String lnaam, String lstraat, int lnummer, int lpostcode, String lgemeente, int knr) {
+    public Object addPakket(int pgewicht, int pstatus, String lnaam, String lstraat, int lnummer, int lpostcode, String lgemeente, String pcommentaar, int knr) {
         Pakketen p = new Pakketen();
         System.out.println(this.getMaxPakketNr());
         p.setPnr(this.getMaxPakketNr() + 1);
@@ -100,6 +100,7 @@ public class DataBean implements DataBeanRemote{
         p.setLpostcode(lpostcode);
         p.setLgemeente(lgemeente);
         p.setBesteldatum(new Date());
+        p.setPcommentaar(pcommentaar);
         Koeriers k = (Koeriers)getKoerier(knr);
         if(k == null)
             throw new IllegalArgumentException("Koerier bestaat nier");
