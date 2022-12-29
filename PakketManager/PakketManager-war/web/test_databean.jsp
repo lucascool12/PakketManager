@@ -12,7 +12,8 @@
         <title>Test pagina</title>
     </head>
     <body>
-        <form action="Test" method="GET">
+        <form action="GenericHandler" method="GET">
+            <input type="hidden" name="Test" value="statusGlobalTerug">
             <button type="submit" name="getPakketen">getPakketen</button><br/>
             <br/>
             <input type="text" name="getPakketen_knr"/><br/>

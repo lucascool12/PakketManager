@@ -16,8 +16,12 @@ import javax.ejb.Remote;
 public interface DataBeanRemote {
     public ArrayList<Object> getPakketen();
     public ArrayList<Object> getPakketen(int knr);
+    public ArrayList<Object> getPakketen(Object koerier);
     public Object getPakket(int pnr);
     public Object getKoerier(int knr);
+    public Object getKoerier(Object koerier);
+    public Object getKoerier(String username);
+    public ArrayList<Object> getKoeriers();
     public void setPakketStatus(Object pakket, int status);
     public void setPakketStatus(int pnr, int status);
     public int getStatus(String status);
