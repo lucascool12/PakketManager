@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import beans.DataBeanRemote;
+import java.util.ArrayList;
 
 /**
  *
@@ -28,15 +29,12 @@ public class GenericHandler extends HttpServlet {
     private static final int PROBLEEM = 1;
     private static final int GELEVERD = 2;
     
-    public void init() {
-        
-    }
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession sessie = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
         
+        //##### INDEX PAGE LOOK UP PACKAGE #####
         if (request.getParameter("hidden").equals("indexGlobalLookup")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
             request.setAttribute("pakketID", pakket.getPnr());
@@ -44,19 +42,33 @@ public class GenericHandler extends HttpServlet {
             
             RequestDispatcher rd = request.getRequestDispatcher("status.jsp");
             rd.forward(request, response);
+        
+        //##### INDEX PAGE LOGIN BEDIENDE #####
         } else if (request.getParameter("hidden").equals("indexGlobalLoginBediende")) {
-            response.sendRedirect("bediende/detailsBed.jsp");
+            ArrayList<Object> koeriers = dbr.getKoeriers();
+            sessie.setAttribute("koeriers", koeriers);
+            response.sendRedirect("bediende/overzichtBed.jsp");
+        
+        //##### INDEX PAGE LOGIN KOERIER #####
         } else if (request.getParameter("hidden").equals("indexGlobalLoginKoerier")) {
-            response.sendRedirect("koerier/detailsKoe.jsp");
+            ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier((String) sessie.getAttribute("currentUser")));
+            sessie.setAttribute("koerierPakketten", pakketlijst);
+            response.sendRedirect("koerier/overzichtKoe.jsp");
+        
+        //##### LOOK UP PACKAGE PAGE RETURN TO INDEX PAGE #####
         } else if (request.getParameter("hidden").equals("statusGlobalTerug")) {
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.forward(request, response);
+        
+        //##### GENERAL KOERIER PAGE LOOKUP PACKAGE #####
         } else if (request.getParameter("hidden").equals("overzichtKoerierBekijk")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
             request.setAttribute("pakket", pakket);
             
             RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
             rd.forward(request, response);
+            
+        //##### KOERIER LOOKUP PACKAGE PAGE LIST AS PROBLEM #####
         } else if (request.getParameter("hidden").equals("detailsKoerierProbleem")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
             if (dbr.getPakketStatus(pakket) == PROBLEEM || dbr.getPakketStatus(pakket) == GELEVERD) {
@@ -67,6 +79,8 @@ public class GenericHandler extends HttpServlet {
             
             RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
             rd.forward(request, response);
+            
+        //##### KOERIER LOOKUP PACKAGE PAGE LIST AS DELIVERED #####
         } else if (request.getParameter("hidden").equals("detailsKoerierGeleverd")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
             if (dbr.getPakketStatus(pakket) == ONDERWEG || dbr.getPakketStatus(pakket) == PROBLEEM) {
@@ -77,9 +91,13 @@ public class GenericHandler extends HttpServlet {
             
             RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
             rd.forward(request, response);
+        
+        //##### KOERIER LOOKUP PACKAGE PAGE RETURN TO GENERAL KOERIER PAGE #####
         } else if (request.getParameter("hidden").equals("detailsKoerierTerug")) {
             RequestDispatcher rd = request.getRequestDispatcher("koerier/overzichtKoe.jsp");
             rd.forward(request, response);
+        
+        //##### GENERAL BEDIENDE PAGE LOOKUP PACKAGE #####
         } else if (request.getParameter("hidden").equals("overzichtBediendeBekijk")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
             Koeriers koerier = pakket.getKnr();
@@ -88,6 +106,8 @@ public class GenericHandler extends HttpServlet {
             
             RequestDispatcher rd = request.getRequestDispatcher("bediende/overzichtBed.jsp");
             rd.forward(request, response);
+        
+        //##### GENERAL BEDIENDE PAGE ADD PACKAGE #####
         } else if (request.getParameter("hidden").equals("overzichtBediendeVoegtoe")) {
             int pgewicht = Integer.valueOf(request.getParameter("gewicht"));
             int pstatus = ONDERWEG;
@@ -103,32 +123,12 @@ public class GenericHandler extends HttpServlet {
             
             RequestDispatcher rd = request.getRequestDispatcher("bediende/detailsBed.jsp");
             rd.forward(request, response);
+        
+        //##### BEDIENDE LOOKUP PACKAGE PAGE RETURN TO GENERAL BEDIENDE PAGE #####
         } else if (request.getParameter("hidden").equals("detailsBediendeTerug")) {
-            RequestDispatcher rd = request.getRequestDispatcher("bediende/detailsBed.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("bediende/overzichtBed.jsp");
             rd.forward(request, response);
         } 
-        
-        /*try{
-            URI uri = new URI(request.getRequestURI());
-            ArrayList<String> path = new ArrayList<String>(Arrays.asList(uri.getPath().split("/")));
-            path.remove(0); //empty entry because URI path startswith /
-            System.out.println(path);
-            //if moet van eerste entries naar laatste omdat java suckt
-            if(path.get(0).equals("PakketManager-war") && path.size() == 1){
-                request.setAttribute("path", path.get(0));
-                RequestDispatcher rd = request.getRequestDispatcher("test.jsp");
-                rd.forward(request, response);
-            }else if(path.get(1).equals("Koerier")){
-                request.setAttribute("path", path.get(1));
-                RequestDispatcher rd = request.getRequestDispatcher("test.jsp");
-                rd.forward(request, response);
-            }else{
-                response.sendError(404);
-            }
-        }catch(URISyntaxException | IndexOutOfBoundsException e){
-            System.out.println(e);
-            throw new ServletException("Bad request");
-        }*/
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

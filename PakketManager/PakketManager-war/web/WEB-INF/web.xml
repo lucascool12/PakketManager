@@ -13,4 +13,44 @@
             30
         </session-timeout>
     </session-config>
+    <security-constraint>
+        <display-name>koerierconstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>koerier</web-resource-name>
+            <description/>
+            <url-pattern>/koerier/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>koeriers</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>bediendeconstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>bediende</web-resource-name>
+            <description/>
+            <url-pattern>/bediende/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>bediendes</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>DBRealm</realm-name>
+        <form-login-config>
+            <form-login-page>/login.jsp</form-login-page>
+            <form-error-page>/badlogin.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+        <description/>
+        <role-name>koeriers</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>bediendes</role-name>
+    </security-role>
 </web-app>
