@@ -190,4 +190,24 @@ public class DataBean implements DataBeanRemote{
     public int getAantalStatussen() {
         return AANTAL_STATUS;
     }
+
+    @Override
+    public Object getKoerier(String username) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList<Object> getKoeriers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object getKoerier(Object koerier) {
+        return this.getKoerier(((Koeriers)koerier).getKnr());
+    }
+
+    @Override
+    public ArrayList<Object> getPakketen(Object koerier) {
+        return this.getPakketen(((Koeriers)koerier).getKnr());
+    }
 }
