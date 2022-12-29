@@ -5,6 +5,7 @@
  */
 package beans;
 
+import entities.Gebruikers;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -190,15 +191,30 @@ public class DataBean implements DataBeanRemote{
     public int getAantalStatussen() {
         return AANTAL_STATUS;
     }
+    
+    public Object getGebruiker(String username){
+        return em.find(Gebruikers.class, username);
+    }
 
     @Override
     public Object getKoerier(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query q = em.createQuery("select k from Koeriers k where k.knaam = ?1");
+        Object g = getGebruiker(username);
+        if(g == null){
+            return null;
+        }
+        q.setParameter(1, g);
+        try{
+            Object a = q.getSingleResult();
+            return a;
+        }catch(NoResultException e){
+            return null;
+        }
     }
 
     @Override
     public ArrayList<Object> getKoeriers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new ArrayList<>(em.createQuery("Select k from Koeriers k").getResultList());
     }
 
     @Override

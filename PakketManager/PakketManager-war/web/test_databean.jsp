@@ -57,6 +57,12 @@
             <label for="setStatus_status">status</label>
             <input type="text" name="setStatus_status"/><br/>
             <button type="submit" name="setStatus" value="bleep">setStatus</button><br/>
+            <br/>
+            <label for="getKoerier_username">username</label>
+            <input type="text" name="getKoerier_username"/><br/>
+            <button type="submit" name="_getKoerier" value="bleep">getKoerier</button><br/>
+            <br/>
+            <button type="submit" name="getKoeriers" value="bleep">getKoeriers</button><br/>
         </form>
     </body>
 </html>

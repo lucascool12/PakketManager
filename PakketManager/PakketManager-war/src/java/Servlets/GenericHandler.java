@@ -86,6 +86,16 @@ public class GenericHandler extends HttpServlet {
                 int status = Integer.parseInt(request.getParameter("setStatus_status"));
                 System.out.println("setStatus");
                 dbr.setPakketStatus(pnr, status);
+            }else if(request.getParameter("_getKoerier") != null){
+                String username = request.getParameter("getKoerier_username");
+                System.out.println("getKoerier");
+                Koeriers k = (Koeriers) dbr.getKoerier(username);
+                System.out.println(k.getKnr());
+            }else if(request.getParameter("getKoeriers") != null){
+                System.out.println("getKoeriers");
+                dbr.getKoeriers().forEach((k) -> {
+                    System.out.println(((Koeriers)k).getKnr());
+                });
             }
             RequestDispatcher rd = request.getRequestDispatcher("test_databean.jsp");
             rd.forward(request, response);
