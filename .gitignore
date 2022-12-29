@@ -10,3 +10,5 @@ build
 !Beans-interface/nbproject/project.properties
 !.gitignore
 !README.md
+!PakketManager/setup/glassfish-resources.xml
+!PakketManager/PakketManager-ejb/src/conf/persistence.xml

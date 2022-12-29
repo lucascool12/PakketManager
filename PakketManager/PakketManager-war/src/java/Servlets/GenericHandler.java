@@ -33,7 +33,64 @@ public class GenericHandler extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sessie = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
-        
+        if(request.getParameter("Test") != null){
+            if(request.getParameter("getPakketen") != null){
+                dbr.getPakketen().forEach((p) -> {
+                    dbr.printPakket(p);
+                }); //System.out.println("-----" + );
+            }else if(request.getParameter("getPakketen_knr_submit") != null){
+                int knr = Integer.parseInt(request.getParameter("getPakketen_knr"));
+                dbr.getPakketen(knr).forEach((p) -> {
+                    dbr.printPakket(p);
+                });
+                //System.out.println("-----" + );
+            }else if(request.getParameter("getPakket_submit") != null){
+                int pnr = Integer.parseInt(request.getParameter("getPakket"));
+                dbr.printPakket(dbr.getPakket(pnr));
+                //System.out.println("-----" + );
+            }else if(request.getParameter("getKoerier_submit") != null){
+                int knr = Integer.parseInt(request.getParameter("getKoerier"));
+                System.out.println("-----" + dbr.getKoerier(knr));
+            }else if(request.getParameter("getPakketStatus_submit") != null){
+                int pnr = Integer.parseInt(request.getParameter("getPakketStatus"));
+                System.out.println("-----" + dbr.getPakketStatus(pnr));
+            }else if(request.getParameter("addPakket_submit") != null){
+                int pgewicht = Integer.parseInt(request.getParameter("addPakket_pgewicht"));
+                int pstatus = Integer.parseInt(request.getParameter("addPakket_pstatus"));
+                String lnaam = request.getParameter("addPakket_lnaam");
+                String lstraat = request.getParameter("addPakket_lstraat");
+                int lnummer = Integer.parseInt(request.getParameter("addPakket_lnummer"));
+                int lpostcode = Integer.parseInt(request.getParameter("addPakket_lpostcode"));
+                String lgemeente = request.getParameter("addPakket_lgemeente");
+                int knr = Integer.parseInt(request.getParameter("addPakket_knr"));
+                Object p = dbr.addPakket(
+                        pgewicht,
+                        pstatus,
+                        lnaam,
+                        lstraat,
+                        lnummer,
+                        lpostcode,
+                        lgemeente,
+                        "niks",
+                        knr
+                    );
+                dbr.printPakket(p);
+            }else if(request.getParameter("getMaxPnr") != null){
+                System.out.println("-------" + dbr.getMaxPakketNr());
+            }else if(request.getParameter("getStatussenAantal") != null){
+                int status = Integer.parseInt(request.getParameter("getStatussenAantal_status"));
+                System.out.println("getStatussenAantal_status");
+                System.out.println("-------" + dbr.getAantalPakketMetStatus(status));
+            }else if(request.getParameter("setStatus") != null){
+                int pnr = Integer.parseInt(request.getParameter("setStatus_pnr"));
+                int status = Integer.parseInt(request.getParameter("setStatus_status"));
+                System.out.println("setStatus");
+                dbr.setPakketStatus(pnr, status);
+            }
+            RequestDispatcher rd = request.getRequestDispatcher("test_databean.jsp");
+            rd.forward(request, response);
+            return;
+        }
         //##### INDEX PAGE LOOK UP PACKAGE #####
         if (request.getParameter("hidden").equals("indexGlobalLookup")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
