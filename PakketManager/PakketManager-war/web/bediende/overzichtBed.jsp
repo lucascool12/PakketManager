@@ -14,24 +14,28 @@
     </head>
     <body>
         <h1>Welkom bediende!</h1>
+        <p>Zoek een pakket op:</p>
         <table>
             <tr>
                 <th>ID</th>
                 <th>Status</th>
+                <th></th>
             </tr>
-            <tr>
-                <c:forEach var="pakket" items="${applicationScope.bediendePakketten}">
-                    <form method=post action="<c:url value="GenericHandler"/>">
-                        <td>${pakket.getId()}</td>
-                        <td><input type="submit" value="Bekijk"></td>
-                        <input type="hidden" name="hidden" value="overzichtBediendeBekijk">
-                        <input type="hidden" name="pakketID" value="${pakket.getId()}">
-                    </form>
-                </c:forEach>
-            </tr>
+            <c:forEach var="pakket" items="${sessionScope.bediendePakketten}">
+                <tr>
+                <form method=post action="<c:url value="/GenericHandler"/>">
+                    <td>${pakket.getPnr()}</td>
+                    <td>${pakket.getPstatus()}</td>
+                    <td><input type="submit" value="Bekijk"></td>
+                    <input type="hidden" name="hidden" value="overzichtBediendeBekijk">
+                    <input type="hidden" name="pakketID" value="${pakket.getPnr()}">
+                </form>
+                </tr>
+            </c:forEach>
         </table>
         
-        <form method=post action="<c:url value="GenericHandler"/>">
+        <p>Voeg een pakket toe:</p>
+        <form method=post action="<c:url value="/GenericHandler"/>">
             <table>
                 <tr>
                     <th>Naam</th>
@@ -54,8 +58,8 @@
                     <td><input type="text" name="commentaar"></td>
                     <td>
                         <select name="koerier" id="koerier">
-                            <c:forEach var="koe" items="${applicationScope.koeriers}">
-                                <option value='${koe.getKnr()}'>${koe.getKnaam()}</option>
+                            <c:forEach var="koe" items="${sessionScope.koeriers}">
+                                <option value='${koe.getKnr()}'>${koe.getKnaam().getGebruikersnaam()}</option>
                             </c:forEach>
                         </select>
                     </td>

@@ -224,6 +224,6 @@ public class DataBean implements DataBeanRemote{
 
     @Override
     public ArrayList<Object> getPakketen(Object koerier) {
-        return this.getPakketen(((Koeriers)koerier).getKnr());
+        return this.getPakketen((int) ((Koeriers)koerier).getKnr());
     }
 }

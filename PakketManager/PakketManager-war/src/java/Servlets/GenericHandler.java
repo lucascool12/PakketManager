@@ -17,12 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import beans.DataBeanRemote;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.annotation.WebServlet;
 
 /**
  *
  * @author Lucas Van Laer
  */
-//@WebServlet(name = "GenericHandler", urlPatterns = {"/"})
+@WebServlet(name = "GenericHandler", urlPatterns = {"*/GenericHandler"})
 public class GenericHandler extends HttpServlet {
     @EJB private DataBeanRemote dbr;
     private static final int ONDERWEG = 0;
@@ -101,6 +104,13 @@ public class GenericHandler extends HttpServlet {
             rd.forward(request, response);
             return;
         }
+        
+        
+        
+        
+        
+        
+        
         //##### INDEX PAGE LOOK UP PACKAGE #####
         if (request.getParameter("hidden").equals("indexGlobalLookup")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
@@ -113,20 +123,27 @@ public class GenericHandler extends HttpServlet {
         //##### INDEX PAGE LOGIN BEDIENDE #####
         } else if (request.getParameter("hidden").equals("indexGlobalLoginBediende")) {
             ArrayList<Object> koeriers = dbr.getKoeriers();
+            ArrayList<Object> pakketten = dbr.getPakketen();
             sessie.setAttribute("koeriers", koeriers);
+            sessie.setAttribute("bediendePakketten", pakketten);
             response.sendRedirect("bediende/overzichtBed.jsp");
         
         //##### INDEX PAGE LOGIN KOERIER #####
         } else if (request.getParameter("hidden").equals("indexGlobalLoginKoerier")) {
-            ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier((String) sessie.getAttribute("currentUser")));
-            sessie.setAttribute("koerierPakketten", pakketlijst);
-            response.sendRedirect("koerier/overzichtKoe.jsp");
+            response.sendRedirect("koerier/homeKoe.jsp");
         
         //##### LOOK UP PACKAGE PAGE RETURN TO INDEX PAGE #####
         } else if (request.getParameter("hidden").equals("statusGlobalTerug")) {
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.forward(request, response);
         
+        //##### KOERIER BUFFER PAGE TO OVERVIEW KOERIER PAGE #####
+        } else if (request.getParameter("hidden").equals("bufferKoerierOverzicht")) {
+            ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier((String) request.getUserPrincipal().getName()));
+            sessie.setAttribute("koerierPakketten", pakketlijst);
+            RequestDispatcher rd = request.getRequestDispatcher("koerier/overzichtKoe.jsp");
+            rd.forward(request, response);
+            
         //##### GENERAL KOERIER PAGE LOOKUP PACKAGE #####
         } else if (request.getParameter("hidden").equals("overzichtKoerierBekijk")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
@@ -171,7 +188,7 @@ public class GenericHandler extends HttpServlet {
             request.setAttribute("pakket", pakket);
             request.setAttribute("koerier", koerier);
             
-            RequestDispatcher rd = request.getRequestDispatcher("bediende/overzichtBed.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("bediende/detailsBed.jsp");
             rd.forward(request, response);
         
         //##### GENERAL BEDIENDE PAGE ADD PACKAGE #####
@@ -186,7 +203,9 @@ public class GenericHandler extends HttpServlet {
             String pcommentaar = request.getParameter("gemeente");
             int knr = Integer.valueOf(request.getParameter("koerier"));
             Pakketen pakket = (Pakketen) dbr.addPakket(pgewicht, pstatus, lnaam, lstraat, lnummer, lpostcode, lgemeente, pcommentaar, knr);
+            dbr.printPakket(pakket);
             request.setAttribute("pakket", pakket);
+            request.setAttribute("koerier", dbr.getKoerier(knr));
             
             RequestDispatcher rd = request.getRequestDispatcher("bediende/detailsBed.jsp");
             rd.forward(request, response);

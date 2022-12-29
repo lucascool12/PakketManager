@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>Bekijk uw pakket! (Bediendes)</h1>
-        <form method=post action="<c:url value="GenericHandler"/>">
+        <form method=post action="<c:url value="/GenericHandler"/>">
             <table>
                 <tr>
                     <th>Naam</th>
@@ -27,14 +27,14 @@
                     <th>Koerier</th>
                 </tr>
                 <tr>
-                    <td>${request.pakket.getlnaam()}</td>
-                    <td>${request.pakket.getlstraat()}</td>
-                    <td>${request.pakket.getlnummer()}</td>
-                    <td>${request.pakket.getlpostcode()}</td>
-                    <td>${request.pakket.getlgemeente()}</td>
-                    <td>${request.pakket.getpgewicht()}</td>
-                    <td>${request.pakket.getpcommentaar()}</td>
-                    <td>${request.koerier.getknaam()}</td>
+                    <td>${pakket.getLnaam()}</td>
+                    <td>${pakket.getLstraat()}</td>
+                    <td>${pakket.getLnummer()}</td>
+                    <td>${pakket.getLpostcode()}</td>
+                    <td>${pakket.getLgemeente()}</td>
+                    <td>${pakket.getPgewicht()}</td>
+                    <td>${pakket.getPcommentaar()}</td>
+                    <td>${koerier.getKnaam().getGebruikersnaam()}</td>
                 </tr>
             </table>
             <input type="submit" value="Terug">
