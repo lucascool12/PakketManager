@@ -122,6 +122,66 @@ public class GenericHandler extends HttpServlet {
                 request.setAttribute("path", path.get(1));
                 RequestDispatcher rd = request.getRequestDispatcher("test.jsp");
                 rd.forward(request, response);
+            }else if(path.get(1).equals("Test")){
+                if(request.getParameter("getPakketen") != null){
+                    dataBean.getPakketen().forEach((p) -> {
+                        dataBean.printPakket(p);
+                    }); //System.out.println("-----" + );
+                }else if(request.getParameter("getPakketen_knr_submit") != null){
+                    int knr = Integer.parseInt(request.getParameter("getPakketen_knr"));
+                    dataBean.getPakketen(knr).forEach((p) -> {
+                        dataBean.printPakket(p);
+                    });
+                    //System.out.println("-----" + );
+                }else if(request.getParameter("getPakket_submit") != null){
+                    int pnr = Integer.parseInt(request.getParameter("getPakket"));
+                    dataBean.printPakket(dataBean.getPakket(pnr));
+                    //System.out.println("-----" + );
+                }else if(request.getParameter("getKoerier_submit") != null){
+                    int knr = Integer.parseInt(request.getParameter("getKoerier"));
+                    System.out.println("-----" + dataBean.getKoerier(knr));
+                }else if(request.getParameter("getPakketStatus_submit") != null){
+                    int pnr = Integer.parseInt(request.getParameter("getPakketStatus"));
+                    System.out.println("-----" + dataBean.getPakketStatus(pnr));
+                }else if(request.getParameter("addPakket_submit") != null){
+                    int pgewicht = Integer.parseInt(request.getParameter("addPakket_pgewicht"));
+                    int pstatus = Integer.parseInt(request.getParameter("addPakket_pstatus"));
+                    String lnaam = request.getParameter("addPakket_lnaam");
+                    String lstraat = request.getParameter("addPakket_lstraat");
+                    int lnummer = Integer.parseInt(request.getParameter("addPakket_lnummer"));
+                    int lpostcode = Integer.parseInt(request.getParameter("addPakket_lpostcode"));
+                    String lgemeente = request.getParameter("addPakket_lgemeente");
+                    int knr = Integer.parseInt(request.getParameter("addPakket_knr"));
+                    Object p = dataBean.addPakket(
+                            pgewicht,
+                            pstatus,
+                            lnaam,
+                            lstraat,
+                            lnummer,
+                            lpostcode,
+                            lgemeente,
+                            "niks",
+                            knr
+                        );
+                    dataBean.printPakket(p);
+                }else if(request.getParameter("getMaxPnr") != null){
+                    System.out.println("-------" + dataBean.getMaxPakketNr());
+                }else if(request.getParameter("getStatussenAantal") != null){
+                    int status = Integer.parseInt(request.getParameter("getStatussenAantal_status"));
+                    System.out.println("getStatussenAantal_status");
+                    System.out.println("-------" + dataBean.getAantalPakketMetStatus(status));
+                }else if(request.getParameter("setStatus") != null){
+                    int pnr = Integer.parseInt(request.getParameter("setStatus_pnr"));
+                    int status = Integer.parseInt(request.getParameter("setStatus_status"));
+                    System.out.println("setStatus");
+                    dataBean.setPakketStatus(pnr, status);
+                }
+                //else if(request.getParameter("setPakketStatus") != null){
+                    //int knr = Integer.parseInt(request.getParameter("setPakketStatus"));
+                    //System.out.println("-----" + dataBean.getKoerier(knr));
+                //}
+                RequestDispatcher rd = request.getRequestDispatcher("test_databean.jsp");
+                rd.forward(request, response);
             }else{
                 response.sendError(404);
             }
