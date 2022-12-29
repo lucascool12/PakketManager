@@ -16,7 +16,7 @@
         <h1>Uw pakket werd opgezocht</h1>
         <table>
             <td>${request.pakketID}</td>
-            <td>${request.status}</td>
+            <td>${request.pakketStatus}</td>
         </table>
         <form method=post action="<c:url value="GenericHandler"/>">
             <input type="submit" value="Terug">

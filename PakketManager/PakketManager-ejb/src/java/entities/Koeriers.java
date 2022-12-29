@@ -11,27 +11,26 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lucas
+ * @author Maurits
  */
 @Entity
 @Table(name = "KOERIERS")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Koeriers.findAll", query = "SELECT k FROM Koeriers k")
-    , @NamedQuery(name = "Koeriers.findByKnr", query = "SELECT k FROM Koeriers k WHERE k.knr = :knr")
-    , @NamedQuery(name = "Koeriers.findByKnaam", query = "SELECT k FROM Koeriers k WHERE k.knaam = :knaam")
-    , @NamedQuery(name = "Koeriers.findByPaswoord", query = "SELECT k FROM Koeriers k WHERE k.paswoord = :paswoord")})
+    , @NamedQuery(name = "Koeriers.findByKnr", query = "SELECT k FROM Koeriers k WHERE k.knr = :knr")})
 public class Koeriers implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,12 +39,9 @@ public class Koeriers implements Serializable {
     @NotNull
     @Column(name = "KNR")
     private Integer knr;
-    @Size(max = 30)
-    @Column(name = "KNAAM")
-    private String knaam;
-    @Size(max = 30)
-    @Column(name = "PASWOORD")
-    private String paswoord;
+    @JoinColumn(name = "KNAAM", referencedColumnName = "GEBRUIKERSNAAM")
+    @ManyToOne
+    private Gebruikers knaam;
     @OneToMany(mappedBy = "knr")
     private Collection<Pakketen> pakketenCollection;
 
@@ -64,20 +60,12 @@ public class Koeriers implements Serializable {
         this.knr = knr;
     }
 
-    public String getKnaam() {
+    public Gebruikers getKnaam() {
         return knaam;
     }
 
-    public void setKnaam(String knaam) {
+    public void setKnaam(Gebruikers knaam) {
         this.knaam = knaam;
-    }
-
-    public String getPaswoord() {
-        return paswoord;
-    }
-
-    public void setPaswoord(String paswoord) {
-        this.paswoord = paswoord;
     }
 
     @XmlTransient

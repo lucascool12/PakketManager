@@ -20,10 +20,12 @@
                 <th>Status</th>
             </tr>
             <tr>
-                <c:forEach var="id" items="session.getParameter(bediendePakketten)">
-                    <form method="<c:url value="bediendeOverzicht"/>">
-                        <input type="hidden" name="ID" value="INSERT ID">
-                        <input type="submit" value="INSERT ID">
+                <c:forEach var="pakket" items="${applicationScope.koerierPakketten}">
+                    <form method=post action="<c:url value="GenericHandler"/>">
+                        <td>${pakket.getId()}</td>
+                        <td><input type="submit" value="Bekijk"></td>
+                        <input type="hidden" name="hidden" value="overzichtKoerierBekijk">
+                        <input type="hidden" name="pakketID" value="${pakket.getId()}">
                     </form>
                 </c:forEach>
             </tr>

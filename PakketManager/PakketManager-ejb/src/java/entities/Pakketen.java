@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lucas
+ * @author Maurits
  */
 @Entity
 @Table(name = "PAKKETEN")
@@ -39,12 +39,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Pakketen.findByLnummer", query = "SELECT p FROM Pakketen p WHERE p.lnummer = :lnummer")
     , @NamedQuery(name = "Pakketen.findByLpostcode", query = "SELECT p FROM Pakketen p WHERE p.lpostcode = :lpostcode")
     , @NamedQuery(name = "Pakketen.findByLgemeente", query = "SELECT p FROM Pakketen p WHERE p.lgemeente = :lgemeente")
-    , @NamedQuery(name = "Pakketen.findByBesteldatum", query = "SELECT p FROM Pakketen p WHERE p.besteldatum = :besteldatum")})
+    , @NamedQuery(name = "Pakketen.findByBesteldatum", query = "SELECT p FROM Pakketen p WHERE p.besteldatum = :besteldatum")
+    , @NamedQuery(name = "Pakketen.findByPcommentaar", query = "SELECT p FROM Pakketen p WHERE p.pcommentaar = :pcommentaar")})
 public class Pakketen implements Serializable {
-
-    @Size(max = 80)
-    @Column(name = "PCOMMENTAAR")
-    private String pcommentaar;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -72,6 +69,9 @@ public class Pakketen implements Serializable {
     @Column(name = "BESTELDATUM")
     @Temporal(TemporalType.DATE)
     private Date besteldatum;
+    @Size(max = 80)
+    @Column(name = "PCOMMENTAAR")
+    private String pcommentaar;
     @JoinColumn(name = "KNR", referencedColumnName = "KNR")
     @ManyToOne
     private Koeriers knr;
@@ -155,6 +155,14 @@ public class Pakketen implements Serializable {
         this.besteldatum = besteldatum;
     }
 
+    public String getPcommentaar() {
+        return pcommentaar;
+    }
+
+    public void setPcommentaar(String pcommentaar) {
+        this.pcommentaar = pcommentaar;
+    }
+
     public Koeriers getKnr() {
         return knr;
     }
@@ -186,14 +194,6 @@ public class Pakketen implements Serializable {
     @Override
     public String toString() {
         return "entities.Pakketen[ pnr=" + pnr + " ]";
-    }
-
-    public String getPcommentaar() {
-        return pcommentaar;
-    }
-
-    public void setPcommentaar(String pcommentaar) {
-        this.pcommentaar = pcommentaar;
     }
     
 }

@@ -31,11 +31,12 @@
             </tr>
         </table>
         
-        <form method="<c:url value="bevestiging"/>">
+        <form method=post action="<c:url value="GenericHandler"/>">
             <table>
                 <tr>
                     <th>Naam</th>
-                    <th>Adres</th>
+                    <th>Straat</th>
+                    <th>Nummer</th>
                     <th>Postcode</th>
                     <th>Gemeente</th>
                     <th>Gewicht</th>
@@ -45,7 +46,8 @@
                 </tr>
                 <tr>
                     <td><input type="text" name="naam"></td>
-                    <td><input type="text" name="adres"></td>
+                    <td><input type="text" name="straat"></td>
+                    <td><input type="text" name="nummer"></td>
                     <td><input type="text" name="postcode"></td>
                     <td><input type="text" name="gemeente"></td>
                     <td><input type="text" name="gewicht"></td>
@@ -53,7 +55,7 @@
                     <td>
                         <select name="koerier" id="koerier">
                             <c:forEach var="koe" items="${applicationScope.koeriers}">
-                                <option value='${koe.getLnr()}'>${loc.getLnaam()}</option>
+                                <option value='${koe.getKnr()}'>${koe.getKnaam()}</option>
                             </c:forEach>
                         </select>
                     </td>

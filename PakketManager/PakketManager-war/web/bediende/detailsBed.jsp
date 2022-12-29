@@ -18,7 +18,8 @@
             <table>
                 <tr>
                     <th>Naam</th>
-                    <th>Adres</th>
+                    <th>Straat</th>
+                    <th>Nummer</th>
                     <th>Postcode</th>
                     <th>Gemeente</th>
                     <th>Gewicht</th>
@@ -26,13 +27,14 @@
                     <th>Koerier</th>
                 </tr>
                 <tr>
-                    <td>${sessionScope.naam}</td>
-                    <td>${sessionScope.adres}</td>
-                    <td>${sessionScope.postcode}</td>
-                    <td>${sessionScope.gemeente}</td>
-                    <td>${sessionScope.gewicht}</td>
-                    <td>${sessionScope.commentaar}</td>
-                    <td>${sessionScope.koerier}</td>
+                    <td>${request.pakket.getlnaam()}</td>
+                    <td>${request.pakket.getlstraat()}</td>
+                    <td>${request.pakket.getlnummer()}</td>
+                    <td>${request.pakket.getlpostcode()}</td>
+                    <td>${request.pakket.getlgemeente()}</td>
+                    <td>${request.pakket.getpgewicht()}</td>
+                    <td>${request.pakket.getpcommentaar()}</td>
+                    <td>${request.koerier.getknaam()}</td>
                 </tr>
             </table>
             <input type="submit" value="Terug">

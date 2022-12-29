@@ -11,10 +11,10 @@ groep varchar(20) );
 
 insert into gebruikers values ('10000', '10000');
 insert into gebruikers values ('10001', '10001');
-insert into gebruikers values ('10002', '10002');
-insert into gebruikers values ('90001', '90001');
+insert into gebruikers values ('20000', '20000');
+insert into gebruikers values ('20001', '20001');
 
-insert into groepen values ('10000', 'klanten' );
-insert into groepen values ('10001', 'klanten' );
-insert into groepen values ('10002', 'klanten' );
-insert into groepen values ('90001', 'beheerders' );
+insert into groepen values ('10000', 'bediendes');
+insert into groepen values ('10001', 'bediendes');
+insert into groepen values ('20000', 'koeriers');
+insert into groepen values ('20001', 'koeriers');
