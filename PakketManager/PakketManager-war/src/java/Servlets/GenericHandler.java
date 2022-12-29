@@ -139,7 +139,8 @@ public class GenericHandler extends HttpServlet {
         
         //##### KOERIER BUFFER PAGE TO OVERVIEW KOERIER PAGE #####
         } else if (request.getParameter("hidden").equals("bufferKoerierOverzicht")) {
-            ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier((String) request.getUserPrincipal().getName()));
+            String naam = (String) request.getUserPrincipal().getName();
+            ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier(naam));
             sessie.setAttribute("koerierPakketten", pakketlijst);
             RequestDispatcher rd = request.getRequestDispatcher("koerier/overzichtKoe.jsp");
             rd.forward(request, response);

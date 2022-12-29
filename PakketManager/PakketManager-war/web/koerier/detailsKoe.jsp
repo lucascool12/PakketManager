@@ -13,7 +13,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Bekijk uw pakket ${request.pakket.getPnr()}! (Koerier)</h1>
+        <h1>Bekijk uw pakket ${pakket.getPnr()}! (Koerier)</h1>
         <table>
             <tr>
                 <th>Naam</th>
@@ -28,19 +28,19 @@
                 <th>Geleverd</th>
             </tr>
             <tr>
-                <td>${request.pakket.getLnaam()}</td>
-                <td>${request.pakket.getLstraat()}</td>
-                <td>${request.pakket.getLnummer()}</td>
-                <td>${request.pakket.getLpostcode()}</td>
-                <td>${request.pakket.getLgemeente()}</td>
-                <td>${request.pakket.getPgewicht()}</td>
-                <td>${request.pakket.getPcommentaar()}</td>
-                <td>${request.pakket.getPstatus()}</td>
+                <td>${pakket.getLnaam()}</td>
+                <td>${pakket.getLstraat()}</td>
+                <td>${pakket.getLnummer()}</td>
+                <td>${pakket.getLpostcode()}</td>
+                <td>${pakket.getLgemeente()}</td>
+                <td>${pakket.getPgewicht()}</td>
+                <td>${pakket.getPcommentaar()}</td>
+                <td>${pakket.getPstatus()}</td>
                 <td>
                     <form method=post action="<c:url value="GenericHandler"/>">
                         <input type="submit" value="Probleem">
                         <input type="hidden" name="hidden" value="detailsKoerierProbleem">
-                        <input type="hidden" name="pakketID" value="${request.pakket.getPnr()}">
+                        <input type="hidden" name="pakketID" value="${pakket.getPnr()}">
                     </form>
                 </td>
                 <td>

@@ -13,7 +13,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Welkom koerier ${request.getUserPrincipal().getName()}!</h1>
+        <h1>Welkom koerier <%=
+            request.getUserPrincipal().getName()
+            %>!</h1>
         <p>Klik hier om uw pakketten te bekijken:</p>
         <form method=post action="<c:url value="/GenericHandler"/>">
                 <input type="submit" value="Bekijk">
