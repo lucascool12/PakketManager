@@ -6,6 +6,7 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="st" class="beans.StatusTranslater"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,7 +26,7 @@
                 <tr>
                 <form method=post action="<c:url value="/GenericHandler"/>">
                     <td>${pakket.getPnr()}</td>
-                    <td>${pakket.getPstatus()}</td>
+                    <td>${st.getStatusNaam(pakket.getPstatus())}</td>
                     <td><input type="submit" value="Bekijk"></td>
                     <input type="hidden" name="hidden" value="overzichtBediendeBekijk">
                     <input type="hidden" name="pakketID" value="${pakket.getPnr()}">

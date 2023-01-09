@@ -6,6 +6,7 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="st" class="beans.StatusTranslater"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +22,7 @@
             </tr>
             <tr>
                 <td>${pakketID}</td>
-                <td>${pakketStatus}</td>
+                <td>${st.getStatusNaam(pakketStatus)}</td>
             </tr>
         </table>
         <form method=post action="<c:url value="GenericHandler"/>">
