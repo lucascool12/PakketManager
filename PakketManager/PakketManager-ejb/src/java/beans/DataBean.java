@@ -22,13 +22,6 @@ import javax.persistence.NoResultException;
  */
 @Stateless
 public class DataBean implements DataBeanRemote{
-    public static final String TRANSIT = "Transit";
-    public static final String PROBLEEM = "Probleem";
-    public static final String GELEVERD = "Geleverd";
-    public static final int TRANSIT_STAT = 0;
-    public static final int PROBLEEM_STAT = 1;
-    public static final int GELEVERD_STAT = 2;
-    public static final int AANTAL_STATUS = 3; //begint bij 0 tot aantal - 1
     
     @PersistenceContext
     private EntityManager em;
@@ -57,6 +50,7 @@ public class DataBean implements DataBeanRemote{
     @Override
     public void setPakketStatus(Object pakket, int status) {
        Pakketen p = (Pakketen) pakket;
+//       Pakketen p = (Pakketen) getPakket(p2.getPnr());
        int old = p.getPstatus();
        p.setPstatus(status);
        em.persist(pakket);
@@ -69,13 +63,7 @@ public class DataBean implements DataBeanRemote{
 
     @Override
     public int getStatus(String status) {
-        if(status.trim().toLowerCase().equals(GELEVERD.toLowerCase())){
-            return GELEVERD_STAT;
-        }else if(status.trim().toLowerCase().equals(PROBLEEM.toLowerCase())){
-            return PROBLEEM_STAT;
-        }else {
-            return TRANSIT_STAT;
-        }
+        return StatusTranslater.getStatus(status);
     }
 
     @Override
@@ -165,11 +153,7 @@ public class DataBean implements DataBeanRemote{
 
     @Override
     public String getStatusNaam(int status) {
-        switch(status){
-            case GELEVERD_STAT: return GELEVERD;
-            case PROBLEEM_STAT: return PROBLEEM;
-            default: return TRANSIT;
-        }
+        return StatusTranslater.getStatusNaam(status);
     }
     
     @Override
@@ -189,7 +173,7 @@ public class DataBean implements DataBeanRemote{
 
     @Override
     public int getAantalStatussen() {
-        return AANTAL_STATUS;
+        return StatusTranslater.AANTAL_STATUS;
     }
     
     public Object getGebruiker(String username){
@@ -225,5 +209,20 @@ public class DataBean implements DataBeanRemote{
     @Override
     public ArrayList<Object> getPakketen(Object koerier) {
         return this.getPakketen((int) ((Koeriers)koerier).getKnr());
+    }
+
+    @Override
+    public int getTransitNum() {
+        return StatusTranslater.TRANSIT_STAT;
+    }
+
+    @Override
+    public int getProbleemNum() {
+        return StatusTranslater.PROBLEEM_STAT;
+    }
+
+    @Override
+    public int getGeleverdNum() {
+        return StatusTranslater.GELEVERD_STAT;
     }
 }

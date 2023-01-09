@@ -18,8 +18,13 @@
             %>!</h1>
         <p>Klik hier om uw pakketten te bekijken:</p>
         <form method=post action="<c:url value="/GenericHandler"/>">
-                <input type="submit" value="Bekijk">
-                <input type="hidden" name="hidden" value="bufferKoerierOverzicht">
-            </form>
+            <input type="submit" value="Bekijk">
+            <input type="hidden" name="hidden" value="bufferKoerierOverzicht">
+        </form>
+        <p>Log uit</p>
+        <form method=post action="<c:url value="/GenericHandler"/>">
+            <input type="submit" value="Log uit">
+            <input type="hidden" name="hidden" value="logUit">
+        </form>
     </body>
 </html>

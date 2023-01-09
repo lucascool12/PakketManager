@@ -45,4 +45,7 @@ public interface DataBeanRemote {
     public void printPakket(Object p);
     public long getAantalPakketMetStatus(int status);
     public int getAantalStatussen();
+    public int getTransitNum();
+    public int getProbleemNum();
+    public int getGeleverdNum();
 }

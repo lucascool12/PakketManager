@@ -68,5 +68,10 @@
                 </tr>
             </table>
         </form>
+        <p>Log uit</p>
+        <form method=post action="<c:url value="/GenericHandler"/>">
+            <input type="submit" value="Log uit">
+            <input type="hidden" name="hidden" value="logUit">
+        </form>
     </body>
 </html>

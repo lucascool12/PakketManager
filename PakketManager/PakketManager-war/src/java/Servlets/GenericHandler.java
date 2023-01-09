@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import beans.DataBeanRemote;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 
@@ -28,12 +29,12 @@ import javax.servlet.annotation.WebServlet;
 @WebServlet(name = "GenericHandler", urlPatterns = {"*/GenericHandler"})
 public class GenericHandler extends HttpServlet {
     @EJB private DataBeanRemote dbr;
-    private static final int ONDERWEG = 0;
-    private static final int PROBLEEM = 1;
-    private static final int GELEVERD = 2;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        final int ONDERWEG = dbr.getTransitNum();
+        final int PROBLEEM = dbr.getProbleemNum();
+        final int GELEVERD = dbr.getGeleverdNum();
         HttpSession sessie = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
         if(request.getParameter("Test") != null){
@@ -115,7 +116,7 @@ public class GenericHandler extends HttpServlet {
         if (request.getParameter("hidden").equals("indexGlobalLookup")) {
             Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
             request.setAttribute("pakketID", pakket.getPnr());
-            request.setAttribute("pakketStatus", pakket.getPstatus());
+            request.setAttribute("pakketStatus", dbr.getStatusNaam(pakket.getPstatus()));
             
             RequestDispatcher rd = request.getRequestDispatcher("status.jsp");
             rd.forward(request, response);
@@ -124,6 +125,9 @@ public class GenericHandler extends HttpServlet {
         } else if (request.getParameter("hidden").equals("indexGlobalLoginBediende")) {
             ArrayList<Object> koeriers = dbr.getKoeriers();
             ArrayList<Object> pakketten = dbr.getPakketen();
+            pakketten.forEach((p) -> {
+                    dbr.printPakket(p);
+                });
             sessie.setAttribute("koeriers", koeriers);
             sessie.setAttribute("bediendePakketten", pakketten);
             response.sendRedirect("bediende/overzichtBed.jsp");
@@ -142,6 +146,8 @@ public class GenericHandler extends HttpServlet {
             String naam = (String) request.getUserPrincipal().getName();
             ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier(naam));
             sessie.setAttribute("koerierPakketten", pakketlijst);
+            sessie.setAttribute("curDate", new Date());
+
             RequestDispatcher rd = request.getRequestDispatcher("koerier/overzichtKoe.jsp");
             rd.forward(request, response);
             
@@ -155,11 +161,17 @@ public class GenericHandler extends HttpServlet {
             
         //##### KOERIER LOOKUP PACKAGE PAGE LIST AS PROBLEM #####
         } else if (request.getParameter("hidden").equals("detailsKoerierProbleem")) {
-            Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
-            if (dbr.getPakketStatus(pakket) == PROBLEEM || dbr.getPakketStatus(pakket) == GELEVERD) {
+            int pnr = Integer.parseInt(request.getParameter("pakketID"));
+            Pakketen pakket = (Pakketen) dbr.getPakket(pnr);
+            if (dbr.getPakketStatus(pakket) == GELEVERD) {
+                request.setAttribute("probleem", "Niet veranderbaar");
+                request.setAttribute("pakket", pakket);
+                RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
+                rd.forward(request, response);
                 return;
             }
-            dbr.setPakketStatus(pakket, PROBLEEM);
+            dbr.setPakketStatus(pnr, PROBLEEM);
+            pakket = (Pakketen) dbr.getPakket(pnr);
             request.setAttribute("pakket", pakket);
             
             RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
@@ -167,11 +179,17 @@ public class GenericHandler extends HttpServlet {
             
         //##### KOERIER LOOKUP PACKAGE PAGE LIST AS DELIVERED #####
         } else if (request.getParameter("hidden").equals("detailsKoerierGeleverd")) {
-            Pakketen pakket = (Pakketen) dbr.getPakket(Integer.parseInt(request.getParameter("pakketID")));
-            if (dbr.getPakketStatus(pakket) == ONDERWEG || dbr.getPakketStatus(pakket) == PROBLEEM) {
+            int pnr = Integer.parseInt(request.getParameter("pakketID"));
+            Pakketen pakket = (Pakketen) dbr.getPakket(pnr);
+            if (dbr.getPakketStatus(pakket) == GELEVERD) {
+                request.setAttribute("probleem", "Niet veranderbaar");
+                request.setAttribute("pakket", pakket);
+                RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
+                rd.forward(request, response);
                 return;
             }
-            dbr.setPakketStatus(pakket, GELEVERD);
+            dbr.setPakketStatus(pnr, GELEVERD);
+            pakket = (Pakketen) dbr.getPakket(pnr);
             request.setAttribute("pakket", pakket);
             
             RequestDispatcher rd = request.getRequestDispatcher("koerier/detailsKoe.jsp");
@@ -179,6 +197,9 @@ public class GenericHandler extends HttpServlet {
         
         //##### KOERIER LOOKUP PACKAGE PAGE RETURN TO GENERAL KOERIER PAGE #####
         } else if (request.getParameter("hidden").equals("detailsKoerierTerug")) {
+            String naam = (String) request.getUserPrincipal().getName();
+            ArrayList<Object> pakketlijst = dbr.getPakketen(dbr.getKoerier(naam));
+            sessie.setAttribute("koerierPakketten", pakketlijst);
             RequestDispatcher rd = request.getRequestDispatcher("koerier/overzichtKoe.jsp");
             rd.forward(request, response);
         
@@ -204,7 +225,6 @@ public class GenericHandler extends HttpServlet {
             String pcommentaar = request.getParameter("gemeente");
             int knr = Integer.valueOf(request.getParameter("koerier"));
             Pakketen pakket = (Pakketen) dbr.addPakket(pgewicht, pstatus, lnaam, lstraat, lnummer, lpostcode, lgemeente, pcommentaar, knr);
-            dbr.printPakket(pakket);
             request.setAttribute("pakket", pakket);
             request.setAttribute("koerier", dbr.getKoerier(knr));
             
@@ -213,8 +233,13 @@ public class GenericHandler extends HttpServlet {
         
         //##### BEDIENDE LOOKUP PACKAGE PAGE RETURN TO GENERAL BEDIENDE PAGE #####
         } else if (request.getParameter("hidden").equals("detailsBediendeTerug")) {
+            ArrayList<Object> pakketten = dbr.getPakketen();
+            sessie.setAttribute("bediendePakketten", pakketten);
             RequestDispatcher rd = request.getRequestDispatcher("bediende/overzichtBed.jsp");
             rd.forward(request, response);
+        } else if (request.getParameter("hidden").equals("logUit")) {
+            sessie.invalidate();
+            response.sendRedirect("index.jsp");
         } 
         
         /*try{

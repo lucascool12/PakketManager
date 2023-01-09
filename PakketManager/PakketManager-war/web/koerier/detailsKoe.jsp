@@ -6,6 +6,7 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="st" class="beans.StatusTranslater"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,6 +15,13 @@
     </head>
     <body>
         <h1>Bekijk uw pakket ${pakket.getPnr()}! (Koerier)</h1>
+        <%
+            if(request.getAttribute("probleem") != null){
+        %>
+        <p>
+            Er was een probleem: ${probleem}
+        </p>
+        <%}%>
         <table>
             <tr>
                 <th>Naam</th>
@@ -23,6 +31,7 @@
                 <th>Gemeente</th>
                 <th>Gewicht</th>
                 <th>Commentaar</th>
+                <th>Besteldatum</th>
                 <th>Status</th>
                 <th>Probleem</th>
                 <th>Geleverd</th>
@@ -35,7 +44,8 @@
                 <td>${pakket.getLgemeente()}</td>
                 <td>${pakket.getPgewicht()}</td>
                 <td>${pakket.getPcommentaar()}</td>
-                <td>${pakket.getPstatus()}</td>
+                <td>${pakket.getBesteldatum()}</td>
+                <td>${st.getStatusNaam(pakket.getPstatus())}</td>
                 <td>
                     <form method=post action="<c:url value="GenericHandler"/>">
                         <input type="submit" value="Probleem">
@@ -47,7 +57,7 @@
                     <form method=post action="<c:url value="GenericHandler"/>">
                         <input type="submit" value="Geleverd">
                         <input type="hidden" name="hidden" value="detailsKoerierGeleverd">
-                        <input type="hidden" name="pakketID" value="${request.pakket.getPnr()}">
+                        <input type="hidden" name="pakketID" value="${pakket.getPnr()}">
                     </form>
                 </td>
             </tr>
@@ -55,6 +65,11 @@
         <form method=post action="<c:url value="GenericHandler"/>">
             <input type="submit" value="Terug">
             <input type="hidden" name="hidden" value="detailsKoerierTerug">
+        </form>
+        <p>Log uit</p>
+        <form method=post action="<c:url value="/GenericHandler"/>">
+            <input type="submit" value="Log uit">
+            <input type="hidden" name="hidden" value="logUit">
         </form>
     </body>
 </html>
