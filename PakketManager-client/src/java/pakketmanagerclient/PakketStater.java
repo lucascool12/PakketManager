@@ -27,7 +27,7 @@ public class PakketStater extends JFrame
         this.setLayout(new GridLayout(3, db.getAantalStatussen()));
         statusAantal = new ArrayList<>();
         for(int i = 0; i < db.getAantalStatussen(); i++){
-            this.add(new JLabel(db.getStatusNaam(i)), 2, i);
+            this.add(new JLabel(db.getStatusNaam(db.getAantalStatussen() - i - 1)), 2, i);
             JLabel statussen = new JLabel(Long.toString(db.getAantalPakketMetStatus(i)));
             statusAantal.add(statussen);
             this.add(statussen, 1, i);
